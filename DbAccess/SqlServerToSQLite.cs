@@ -860,7 +860,7 @@ namespace DbAccess
                     {
                         ViewSchema vs = new ViewSchema();
                         vs.ViewName = (string)reader["TABLE_NAME"];
-                        vs.ViewSQL = (string)reader["VIEW_DEFINITION"];
+                        vs.ViewSQL = reader["VIEW_DEFINITION"] as string ?? "";
 
                         // Remove all ".dbo" strings from the view definition
                         vs.ViewSQL = removedbo.Replace(vs.ViewSQL, string.Empty);
