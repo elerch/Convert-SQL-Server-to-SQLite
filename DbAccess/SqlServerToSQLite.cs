@@ -275,6 +275,7 @@ namespace DbAccess
                 case DbType.Binary:
                 case DbType.Boolean:
                 case DbType.DateTime:
+                case DbType.Date:
                 case DbType.DateTime2:
                     break;
 
@@ -413,6 +414,8 @@ namespace DbAccess
                 return DbType.Double;
             if (cs.ColumnType == "timestamp" || cs.ColumnType == "datetime")
                 return DbType.DateTime;
+            if (cs.ColumnType == "date")
+                return DbType.Date;
             if (cs.ColumnType == "datetime2")
                 return DbType.DateTime2;
             if (cs.ColumnType == "nchar" || cs.ColumnType == "char")
@@ -942,6 +945,8 @@ namespace DbAccess
                     // 'int' in its type name will be assigned an INTEGER affinity
                     if (dataType == "timestamp")
                         dataType = "blob";
+                    else if (dataType == "date")
+                        dataType = "date";
                     else if (dataType == "datetime" || dataType == "smalldatetime" || dataType == "datetime2")
                         dataType = "datetime";
                     else if (dataType == "decimal")
@@ -1083,6 +1088,7 @@ namespace DbAccess
                 dataType == "tinyint" || dataType == "uniqueidentifier" ||
                 dataType == "xml" || dataType == "sql_variant" ||
                 dataType == "decimal" || dataType == "nchar" || 
+                dataType == "date" ||
                 dataType == "datetime" || dataType == "datetime2")
                 return;
             throw new ApplicationException("Validation failed for data type [" + dataType + "]");
