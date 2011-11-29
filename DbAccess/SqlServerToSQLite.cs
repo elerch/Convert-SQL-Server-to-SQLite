@@ -272,11 +272,15 @@ namespace DbAccess
                         return ParseBlobAsGuid((byte[])val);
                     break;
 
-                case DbType.Binary:
-                case DbType.Boolean:
+                case DbType.Time:
                 case DbType.DateTime:
                 case DbType.Date:
-                case DbType.DateTime2:
+                case DbType.DateTime2: 
+                    if (val is TimeSpan)
+                        return DateTime.MinValue + (TimeSpan)val;
+                    break;
+                case DbType.Binary:
+                case DbType.Boolean:
                     break;
 
                 default:
@@ -428,6 +432,8 @@ namespace DbAccess
                 return DbType.Object;
             if (cs.ColumnType == "integer")
                 return DbType.Int64;
+            if (cs.ColumnType == "time")
+                return DbType.Time;
 
             _log.Error("illegal db type found");
             throw new ApplicationException("Illegal DB type found (" + cs.ColumnType + ")");
@@ -949,6 +955,8 @@ namespace DbAccess
                         dataType = "date";
                     else if (dataType == "datetime" || dataType == "smalldatetime" || dataType == "datetime2")
                         dataType = "datetime";
+                    else if (dataType == "time")
+                        dataType = "datetime";
                     else if (dataType == "decimal")
                         dataType = "numeric";
                     else if (dataType == "money" || dataType == "smallmoney")
@@ -1089,6 +1097,7 @@ namespace DbAccess
                 dataType == "xml" || dataType == "sql_variant" ||
                 dataType == "decimal" || dataType == "nchar" || 
                 dataType == "date" ||
+                dataType == "time" ||
                 dataType == "datetime" || dataType == "datetime2")
                 return;
             throw new ApplicationException("Validation failed for data type [" + dataType + "]");
